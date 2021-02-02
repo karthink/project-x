@@ -7,7 +7,8 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
 - Recognize any directory with a =.project= file as a project. Also works if any parent directory has this file.
   
 - Save and restore project files and window configurations across sessions. Project-X will load all /saved project/ files and directories (as =dired= buffers) and try to recreate the window configuration at the time of saving.
-  + Switching between project states:
+
+  + Enhanced project switching: When I switch projects I switch window configurations too, (re)opening files as needed.
     #+ATTR_ORG: :width 500
     #+ATTR_HTML: :width 1000px
     [[file:project-switching.gif]]
@@ -18,7 +19,9 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
     #+CAPTION: 
     [[file:project-switching-2.gif]]
 
-More features are planned, but do note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
+While Emacs has many built-in features to save and restore state (bookmarks, desktop, window-configurations and more) none of them allow you to bookmark and switch to, across Emacs sessions, a collection of files, buffers and windows together as a unit... or project. Hence project-x.
+    
+More features are planned, but note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
 
 ** Setup and customization
 Load =project-x.el=, then run =(project-x-mode +1)=.
@@ -87,18 +90,19 @@ All =project.el= features should work as expected.
 - If you use multiple Emacs instances the project states saved to disk can get overwritten.
 
 ** Alternatives
-*** How is this different from just using window-configurations?
-Package-X does use window configurations under the hood. However,
+*** How does this compare with...
+**** ...just using window-configurations?
+Package-X does use window configurations under the hood. However, it has a few advantages:
 - Your project state remains persistent across sessions, and any files or dired buffers are reopened if necessary.
 - Your project state is associated with the project instead of with registers or data structures from other packages.
   
-*** How is this different from Tabs/Workspaces/persp etc?
+**** ...Tabs/Workspaces/persp etc?
 If you think in terms of projects, you may find it more convenient to use =project-x= through the project dispatch menu (=C-x p p=) to continue working from where you left off. This is a helper library to define and handle projects, not an overarching modification to your Emacs usage pattern.
 
-*** How is this different from the Desktop library?
-See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores your entire session, this is a much diminished version of the same for individual projects.
+**** ...the Desktop library?
+See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores your entire session, this is a much diminished version of the same for individual projects. But desktop being an all-or-nothing affair (without extensive customization) is also a disadvantage. Here each project gets its own desktop state.
 
-*** How does this compare to Projectile?
+**** ..Projectile?
 =project.el= is still very basic in its features and =project-x= is a small addition to it. However, as far as I know Projectile does not offer the ability to save and restore your project sessions (including window configurations).
 
 ** Planned features
@@ -108,6 +112,6 @@ See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores y
 ** Technical notes
 Since this library uses the built in Emacs API to store the state, it is very compact. The machinery to maintain and recreate project states is only four short =defun='s. Likewise implementing a 'local' project backend is fewer than ten lines of code.
 
-=project-x= only creates entries containing project state information for a project in the data structure it uses (an associative list) when you save its state. Thus it should remain fast even if you have thousands of projects so long as you actively work on a few at a time. If you experience slow down please raise an issue and I will consider reimplementing it as a hash table.
+=project-x= creates entries containing project state information for a project in the data structure it uses (an associative list) only when you save its state. Thus it should remain fast even if you have thousands of projects so long as you actively work on a few at a time. If you experience slow down please raise an issue and I will consider reimplementing it as a hash table.
 
 
