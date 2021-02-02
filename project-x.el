@@ -145,8 +145,15 @@ DIR must include a .project file to be considered a project."
       (progn
         (add-hook 'project-find-functions 'project-try-local 90)
         (add-hook 'kill-emacs-hook 'project--window-state-write)
-        (project--window-state-read))
+        (project--window-state-read)
+        (define-key project-prefix-map (kbd "w") 'project-window-state-save)
+        (define-key project-prefix-map (kbd "j") 'project-window-state-load)
+        (add-to-list 'project-switch-commands
+                     '(?j "Restore windows" project-windows) t))
     (remove-hook 'project-find-functions 'project-try-local 90)
-    (remove-hook 'kill-emacs-hook 'project--window-state-write)))
+    (remove-hook 'kill-emacs-hook 'project--window-state-write)
+    (define-key project-prefix-map (kbd "w") nil)
+    (define-key project-prefix-map (kbd "j") nil)
+    (delete '(?j "Restore windows" project-windows) project-switch-commands)))
 
 (provide 'project-x)
