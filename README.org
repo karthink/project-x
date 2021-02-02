@@ -1,0 +1,93 @@
+* Project-X
+
+Project-X adds a couple of convenience features for Emacs' =project.el= library.
+
+- Recognize any directory with a =.project= file as a project. Also works if any parent directory has this file.
+  
+- Save and restore project files and window configurations across sessions. Project-X will load all /saved/ project files and directories (as =dired= buffers) and try to recreate the window configuration at the time of saving.
+  [[file:project-switching.mp4]]
+
+More features are planned, but do note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
+
+* Setup and customization
+With =use-package=:
+#+begin_src emacs-lisp
+(use-package project-x
+  :load-path "~/path/to/project-x/"
+  :after project
+  :config
+  (project-x-mode 1))
+#+end_src
+
+OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
+
+#+begin_src emacs-lisp
+  (use-package project-x
+    :load-path "~/path/to/project-x/"
+    :after project
+    :config
+    (add-hook 'project-find-functions 'project-try-local 90)
+    (add-hook 'kill-emacs-hook 'project--window-state-write)
+    (add-to-list 'project-switch-commands
+                 '(?j "Restore windows" project-windows) t)
+      :bind (("C-x p w" . project-window-state-save)
+             ("C-x p j" . project-window-state-load)))
+#+end_src
+
+There are only two customization options right now:
+- =project-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
+- =project-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=.
+
+* Usage
+
+** Session management
+The =project-x-mode= minor-mode is provided for convenience. It enables these features:
+
+| Keybinding   | Command                     | Effect                                  |
+|--------------+-----------------------------+-----------------------------------------|
+| =C-x p w=    | =project-window-state-save= | Save your current project session       |
+| =C-x p j=    | =project-window-state-load= | Load session from a project             |
+| =C-x p p, j= | =project-windows=           | Load session from project dispatch menu |
+
+Save a project session with =C-x p w= and you should be able to load it any time across Emacs sessions.
+
+You can go back to your previous window configuration with =winner-undo=.
+
+** 'Local' projects
+To recognize 'local' projects with a ".project" file somewhere in the path, turn on =project-x-mode= OR run
+#+begin_src emacs-lisp
+  (add-hook 'project-find-functions 'project-try-local 90)
+#+end_src
+
+All project.el features should work as expected.
+
+* Limitations
+:PROPERTIES:
+:ID:       c1326cad-5dd9-4789-8e5e-74f5b012b546
+:END:
+- Your project state needs to be manually saved to be restored. I'm looking into auto-saving the state any time a project buffer is opened or window displayed, or when switching projects.
+
+- This is currently limited to storing only the current frame configuration.
+  
+- The only state saved is your project files, project =dired= buffers and the current frame configuration. No minor modes, registers or special buffers (shells, help buffers etc) are recorded. For complete recall you can look into the Desktop library for Emacs.
+
+- If you use multiple Emacs instances the project states saved to disk can get overwritten.
+
+* Alternatives
+** How is this different from just using window-configurations?
+Package-X does use window configurations in the background. However,
+- Your project state remains persistent across sessions, and any files or dired buffers are reopened if necessary.
+- Your project state is associated with the project instead of with registers or structures from other packages.
+  
+** How is this different from Tabs/Workspaces/persp etc?
+If you think in terms of projects, you may find it more convenient to continue working where you left off through the project dispatch menu (=C-x p p=). This is a helper library to define and handle projects, not an overarching modification to your Emacs usage pattern.
+
+** How is this different from the Desktop library?
+See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores your entire session, this is a much diminished version of the same for individual projects.
+
+** How does this compare to Projectile?
+=project.el= is still very basic in its features. However, as far as I know Projectile does not offer the ability to save and restore your project sessions (including window configurations).
+
+* Planned features
+- Autosave the current project configuration when switching projects.
+- Save the window configuration across frames instead of only the current one.
