@@ -79,9 +79,9 @@ All =project.el= features should work as expected.
 
 ** Alternatives
 *** How is this different from just using window-configurations?
-Package-X does use window configurations in the background. However,
+Package-X does use window configurations under the hood. However,
 - Your project state remains persistent across sessions, and any files or dired buffers are reopened if necessary.
-- Your project state is associated with the project instead of with registers or structures from other packages.
+- Your project state is associated with the project instead of with registers or data structures from other packages.
   
 *** How is this different from Tabs/Workspaces/persp etc?
 If you think in terms of projects, you may find it more convenient to continue working where you left off through the project dispatch menu (=C-x p p=). This is a helper library to define and handle projects, not an overarching modification to your Emacs usage pattern.
@@ -90,7 +90,7 @@ If you think in terms of projects, you may find it more convenient to continue w
 See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores your entire session, this is a much diminished version of the same for individual projects.
 
 *** How does this compare to Projectile?
-=project.el= is still very basic in its features. However, as far as I know Projectile does not offer the ability to save and restore your project sessions (including window configurations).
+=project.el= is still very basic in its features and =project-x= is a small addition to it. However, as far as I know Projectile does not offer the ability to save and restore your project sessions (including window configurations).
 
 ** Planned features
 - Autosave the current project configuration when switching projects.
