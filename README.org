@@ -1,5 +1,6 @@
 #+title: Project-X
 #+author: Karthik Chikmagalur
+#+STARTUP: nofold
 
 Project-X adds a couple of convenience features for Emacs' =project.el= library.
 
@@ -14,7 +15,9 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
 More features are planned, but do note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
 
 ** Setup and customization
-With =use-package=:
+Load =project-x.el=, then run =(project-x-mode +1)=.
+
+OR, with =use-package=:
 #+begin_src emacs-lisp
 (use-package project-x
   :load-path "~/path/to/project-x/"
@@ -47,11 +50,11 @@ There are only two customization options right now:
 *** Session management
 The =project-x-mode= minor-mode is provided for convenience. It enables these features:
 
-| Keybinding   | Command                     | Effect                                  |
-|--------------+-----------------------------+-----------------------------------------|
-| =C-x p w=    | =project-window-state-save= | Save your current project session       |
-| =C-x p j=    | =project-window-state-load= | Load session from a project             |
-| =C-x p p, j= | =project-windows=           | Load session from project dispatch menu |
+| Keybinding  | Command                     | Effect                                  |
+|-------------+-----------------------------+-----------------------------------------|
+| =C-x p w=   | =project-window-state-save= | Save your current project session       |
+| =C-x p j=   | =project-window-state-load= | Load session from a project             |
+| =C-x p p j= | =project-windows=           | Load session from project dispatch menu |
 
 Save a project session with =C-x p w= and you should be able to load it any time across Emacs sessions.
 
@@ -84,7 +87,7 @@ Package-X does use window configurations under the hood. However,
 - Your project state is associated with the project instead of with registers or data structures from other packages.
   
 *** How is this different from Tabs/Workspaces/persp etc?
-If you think in terms of projects, you may find it more convenient to continue working where you left off through the project dispatch menu (=C-x p p=). This is a helper library to define and handle projects, not an overarching modification to your Emacs usage pattern.
+If you think in terms of projects, you may find it more convenient to use =project-x= through the project dispatch menu (=C-x p p=) to continue working from where you left off. This is a helper library to define and handle projects, not an overarching modification to your Emacs usage pattern.
 
 *** How is this different from the Desktop library?
 See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores your entire session, this is a much diminished version of the same for individual projects.
@@ -93,5 +96,12 @@ See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores y
 =project.el= is still very basic in its features and =project-x= is a small addition to it. However, as far as I know Projectile does not offer the ability to save and restore your project sessions (including window configurations).
 
 ** Planned features
-- Autosave the current project configuration when switching projects.
+- Autosave the current project configuration when opening project files or switching projects.
 - Save the window configuration across frames instead of only the current one.
+
+** Technical notes
+Since this library uses the built in Emacs API to store the state, it is very compact. The machinery to maintain and recreate project states is only four short =defun='s. Likewise implementing a 'local' project backend is fewer than ten lines of code.
+
+=project-x= only creates entries containing project state information for a project in the data structure it uses (an associative list) when you save its state. Thus it should remain fast even if you have thousands of projects so long as you actively work on a few at a time. If you experience slow down please raise an issue and I will consider reimplementing it as a hash table.
+
+
