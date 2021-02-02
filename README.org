@@ -6,12 +6,10 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
 - Recognize any directory with a =.project= file as a project. Also works if any parent directory has this file.
   
 - Save and restore project files and window configurations across sessions. Project-X will load all /saved project/ files and directories (as =dired= buffers) and try to recreate the window configuration at the time of saving.
-
-#+HTML: <video style="center" width="1000" autoplay loop>
-#+HTML: <source src="~/.local/share/git/project-x/project-switching.mp4" type="video/mp4">
-#+HTML: Your browser does not support the video tag.
-#+HTML: </video>
-#  [[file:project-switching.mp4]]
+  
+  #+ATTR_ORG: :width 500
+  #+ATTR_HTML: :width 1000px
+  [[file:project-switching.gif]]
 
 More features are planned, but do note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
 
