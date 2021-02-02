@@ -12,6 +12,11 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
   #+ATTR_HTML: :width 1000px
   [[file:project-switching.gif]]
 
+  #+ATTR_ORG: :width 500
+  #+ATTR_HTML: :width 1000px
+  #+CAPTION: Restoring project state in a new Emacs instance. Note the new option ("Restore windows") in the project dispatch menu
+  [[file:project-switching-2.gif]]
+
 More features are planned, but do note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
 
 ** Setup and customization
