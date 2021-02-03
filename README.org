@@ -16,7 +16,7 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
   + Restoring project state in a new Emacs instance. Note the new option ("Restore windows") in the project dispatch menu:
     #+ATTR_ORG: :width 500
     #+ATTR_HTML: :width 1000px
-    [[file:project-switching-2.webp]]
+    [[file:project-switching-2.gif]]
 
 While Emacs has many built-in features to save and restore state (bookmarks, desktop, window-configurations and more) none of them allow you to bookmark and switch to, across Emacs sessions, a collection of files, buffers and windows together as a unit... or project. Hence project-x.
     
