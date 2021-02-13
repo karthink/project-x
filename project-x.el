@@ -92,7 +92,7 @@ argument ARG, query for project."
       (setf (alist-get dir project-window-alist nil nil 'equal)
             (list (cons 'files file-list)
                   (cons 'windows (window-state-get nil t)))))
-    (message (format "Saved windows for %s" dir))))
+    (message (format "Saved project state for %s" dir))))
 
 (defun project-window-state-load (dir)
   "Load the saved window state for project with directory
@@ -107,7 +107,7 @@ DIR. If DIR is unspecified query the user for a project instead."
         (dolist (file-name file-list nil)
           (find-file file-name))
         (window-state-put window-config nil 'safe)
-        (message (format "Loaded windows for %s" dir)))
+        (message (format "Restored project state for %s" dir)))
     (message (format "No saved window state for project %s" dir))))
 
 (defun project-windows ()
