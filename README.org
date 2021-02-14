@@ -45,8 +45,8 @@ OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
     (add-hook 'kill-emacs-hook 'project-x--window-state-write)
     (add-to-list 'project-switch-commands
                  '(?j "Restore windows" project-x-windows) t)
-      :bind (("C-x p w" . project-window-state-x-save)
-             ("C-x p j" . project-window-state-x-load)))
+      :bind (("C-x p w" . project-x-window-state-save)
+             ("C-x p j" . project-x-window-state-load)))
 #+end_src
 
 There are only two customization options right now:
