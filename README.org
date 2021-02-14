@@ -41,17 +41,17 @@ OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
     :load-path "~/path/to/project-x/"
     :after project
     :config
-    (add-hook 'project-find-functions 'project-try-local 90)
-    (add-hook 'kill-emacs-hook 'project--window-state-write)
+    (add-hook 'project-find-functions 'project-x-try-local 90)
+    (add-hook 'kill-emacs-hook 'project-x--window-state-write)
     (add-to-list 'project-switch-commands
-                 '(?j "Restore windows" project-windows) t)
-      :bind (("C-x p w" . project-window-state-save)
-             ("C-x p j" . project-window-state-load)))
+                 '(?j "Restore windows" project-x-windows) t)
+      :bind (("C-x p w" . project-window-state-x-save)
+             ("C-x p j" . project-window-state-x-load)))
 #+end_src
 
 There are only two customization options right now:
-- =project-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
-- =project-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=.
+- =project-x-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
+- =project-x-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=.
 
 ** Usage
 
@@ -60,9 +60,9 @@ The =project-x-mode= minor-mode is provided for convenience. It enables these fe
 
 | Keybinding  | Command                     | Effect                                  |
 |-------------+-----------------------------+-----------------------------------------|
-| =C-x p w=   | =project-window-state-save= | Save your current project session       |
-| =C-x p j=   | =project-window-state-load= | Load session from a project             |
-| =C-x p p j= | =project-windows=           | Load session from project dispatch menu |
+| =C-x p w=   | =project-x-window-state-save= | Save your current project session       |
+| =C-x p j=   | =project-x-window-state-load= | Load session from a project             |
+| =C-x p p j= | =project-x-windows=           | Load session from project dispatch menu |
 
 Save a project session with =C-x p w= and you should be able to load it any time across Emacs sessions.
 
@@ -71,7 +71,7 @@ You can go back to your previous window configuration with =winner-undo=.
 *** 'Local' projects
 To recognize 'local' projects with a ".project" file somewhere in the path, turn on =project-x-mode= OR run
 #+begin_src emacs-lisp
-  (add-hook 'project-find-functions 'project-try-local 90)
+  (add-hook 'project-find-functions 'project-x-try-local 90)
 #+end_src
 
 All =project.el= features should work as expected.
@@ -106,7 +106,7 @@ See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores y
 
 ** Planned features
 - Autosave the current project configuration when opening project files or switching projects.
-- Save the window configuration across frames instead of only the current one.
+- Save the window configuration across frames and tabs instead of only the current one.
 
 ** Technical notes
 Since this library uses the built in Emacs API to store the state, it is very compact. The machinery to maintain and recreate project states is only four short =defun='s. Likewise implementing a 'local' project backend is fewer than ten lines of code.
