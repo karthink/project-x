@@ -65,9 +65,12 @@
   "Write project window states to `project-x-window-list-file'.
 If FILE is specified, write to it instead."
   (when project-x-window-alist
+    (require 'pp)
+    (unless file (make-directory (file-name-directory project-x-window-list-file) t))
     (with-temp-file (or file project-x-window-list-file)
       (insert ";;; -*- lisp-data -*-\n")
-      (prin1 project-x-window-alist (current-buffer)))
+      (let ((print-level nil) (print-length nil))
+        (pp project-x-window-alist (current-buffer))))
     (message (format "Wrote project window state to %s" project-x-window-list-file))))
 
 (defun project-x--window-state-read (&optional file)
@@ -77,9 +80,12 @@ If FILE is specified, read from it instead."
            (file-exists-p project-x-window-list-file))
        (with-temp-buffer
          (insert-file-contents (or file project-x-window-list-file))
-         (if-let ((win-state-alist (read (current-buffer))))
-             (setq project-x-window-alist win-state-alist)
-           (message (format "Could not read %s" project-x-window-list-file))))))
+         (condition-case nil
+             (if-let ((win-state-alist (read (current-buffer))))
+                 (setq project-x-window-alist win-state-alist)
+               (message (format "Could not read %s" project-x-window-list-file)))
+           (error (message (format "Could not read %s" project-x-window-list-file)))
+           ))))
 
 (defun project-x-window-state-save (&optional arg)
   "Save current window state of project.
