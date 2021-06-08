@@ -98,6 +98,9 @@ Package-X does use window configurations under the hood. However, it has a few a
 **** ...Tabs/Workspaces/persp etc?
 If you think in terms of projects, you may find it more convenient to use =project-x= through the project dispatch menu (=C-x p p=) to continue working from where you left off. This is a helper library to define and handle projects, not an overarching modification to your Emacs usage pattern.
 
+**** ...Burly?
+[[https://github.com/alphapapa/burly.el][Burly]] provides a more universal method to save and restore frames and window configurations as Emacs bookmarks (thus persistent across sessions) that is not limited to the project metaphor. If you are looking for this feature but in a more general Emacs context you might be better served by it.
+
 **** ...the Desktop library?
 See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores your entire session, this is a much diminished version of the same for individual projects. But desktop being an all-or-nothing affair (without extensive customization) is also a disadvantage. Here each project gets its own desktop state.
 
