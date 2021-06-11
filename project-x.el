@@ -27,7 +27,7 @@
 ;; Some convenience features for project.el:
 ;; - Recognize any directory with a `.project' file as a project.
 ;; - Save and restore project files and window configurations across sessions
-;; 
+;;
 ;; COMMANDS:
 ;;
 ;; project-x-window-state-save : Save the window configuration of currently open project buffers
@@ -45,6 +45,7 @@
 ;;; Code:
 
 (require 'project)
+(eval-when-compile (require 'subr-x))
 
 (defgroup project-x nil
   "Convenience features for the Project library."
@@ -148,10 +149,10 @@ DIR must include a .project file to be considered a project."
 
 ;;;###autoload
 (define-minor-mode project-x-mode
-  "Minor mode to enable extra convenience features for
-  project.el. When enabled, save and load project window states.
-  Recognize any directory that contains (or whose parent
-  contains) a special file as a project."
+  "Minor mode to enable extra convenience features for project.el.
+When enabled, save and load project window states.
+Recognize any directory that contains (or whose parent
+contains) a special file as a project."
   :global t
   :version "0.10"
   :lighter ""
