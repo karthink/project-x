@@ -37,7 +37,9 @@
 ;;
 ;; `project-x-window-list-file': File to store project window configurations
 ;; `project-x-local-identifier': String matched against file names to decide if a
-;;                             directory is a project
+;; directory is a project
+;; `project-x-save-interval': Interval in seconds between autosaves of the
+;; current project.
 ;;
 ;; by Karthik Chikmagalur
 ;; <karthik.chikmagalur@gmail.com>
@@ -46,6 +48,10 @@
 
 (require 'project)
 (eval-when-compile (require 'subr-x))
+(defvar project-prefix-map)
+(defvar project-switch-commands)
+(declare-function project-prompt-project-dir "project")
+(declare-function project--buffer-list "project")
 
 (defgroup project-x nil
   "Convenience features for the Project library."
@@ -59,8 +65,19 @@
   :type 'file
   :group 'project-x)
 
+(defcustom project-x-save-interval nil
+  "Saves the current project state with this interval.
+
+When set to nil auto-save is disabled."
+  :type '(choice (const :tag "Disabled" nil)
+                 integer)
+  :group 'project-x)
+
 (defvar project-x-window-alist nil
   "Alist of window configurations associated with known projects.")
+
+(defvar project-x-save-timer nil
+  "Timer for auto-saving project state.")
 
 (defun project-x--window-state-write (&optional file)
   "Write project window states to `project-x-window-list-file'.
@@ -85,15 +102,14 @@ If FILE is specified, read from it instead."
              (if-let ((win-state-alist (read (current-buffer))))
                  (setq project-x-window-alist win-state-alist)
                (message (format "Could not read %s" project-x-window-list-file)))
-           (error (message (format "Could not read %s" project-x-window-list-file)))
-           ))))
+           (error (message (format "Could not read %s" project-x-window-list-file)))))))
 
 (defun project-x-window-state-save (&optional arg)
   "Save current window state of project.
 With optional prefix argument ARG, query for project."
   (interactive "P")
   (when-let* ((dir (if arg (project-prompt-project-dir)
-                     (project-root (project-current t))))
+                     (project-root (project-current))))
               (default-directory dir))
     (unless project-x-window-alist (project-x--window-state-read))
     (let ((file-list))
@@ -166,12 +182,18 @@ contains) a special file as a project."
         (define-key project-prefix-map (kbd "w") 'project-x-window-state-save)
         (define-key project-prefix-map (kbd "j") 'project-x-window-state-load)
         (add-to-list 'project-switch-commands
-                     '(?j "Restore windows" project-x-windows) t))
+                     '(?j "Restore windows" project-x-windows) t)
+        (when project-x-save-interval
+          (setq project-x-save-timer
+                (run-with-timer 0 (max project-x-save-interval 5)
+                                #'project-x-window-state-save))))
     (remove-hook 'project-find-functions 'project-x-try-local 90)
     (remove-hook 'kill-emacs-hook 'project-x--window-state-write)
     (define-key project-prefix-map (kbd "w") nil)
     (define-key project-prefix-map (kbd "j") nil)
-    (delete '(?j "Restore windows" project-x-windows) project-switch-commands)))
+    (delete '(?j "Restore windows" project-x-windows) project-switch-commands)
+    (when (timerp project-x-save-timer)
+      (cancel-timer project-x-save-timer))))
 
 (provide 'project-x)
 ;;; project-x.el ends here

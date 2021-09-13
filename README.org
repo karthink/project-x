@@ -6,7 +6,7 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
 
 - Recognize any directory with a =.project= file as a project. Also works if any parent directory has this file.
   
-- Save and restore project files and window configurations across sessions. Project-X will load all /saved project/ files and directories (as =dired= buffers) and try to recreate the window configuration at the time of saving.
+- Save and restore project files and window configurations across sessions. Project-X will load all /saved project/ files and directories (as =dired= buffers) and try to recreate the window configuration at the time of saving. Project-X can also auto-save your current project's window configuration regularly.
 
   + Enhanced project switching: When you switch projects you switch window configurations too, (re)opening files as needed.
     #+ATTR_ORG: :width 500
@@ -19,7 +19,7 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
     [[file:project-switching-2.gif]]
 
 While Emacs has many built-in features to save and restore state (bookmarks, desktop, window-configurations and more) none of them allow you to bookmark and switch to, across Emacs sessions, a collection of files, buffers and windows together as a unit... or project. Hence project-x.
-    
+
 More features are planned, but note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
 
 ** Setup and customization
@@ -49,9 +49,10 @@ OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
              ("C-x p j" . project-x-window-state-load)))
 #+end_src
 
-There are only two customization options right now:
+There are three customization options right now:
 - =project-x-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
 - =project-x-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=.
+- =project-x-save-interval=: Number of seconds between autosaves of the current project window configuration. Defaults to nil (autosave disabled).
 
 ** Usage
 
@@ -108,7 +109,7 @@ See [[id:c1326cad-5dd9-4789-8e5e-74f5b012b546][Limitations]]. Desktop restores y
 =project.el= is still very basic in its features and =project-x= is a small addition to it. However, as far as I know Projectile does not offer the ability to save and restore your project sessions (including window configurations).
 
 ** Planned features
-- Autosave the current project configuration when opening project files or switching projects.
+- [X] Autosave the current project configuration when opening project files or switching projects.
 - Save the window configuration across frames and tabs instead of only the current one.
 
 ** Technical notes
