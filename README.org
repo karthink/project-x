@@ -18,6 +18,8 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
     #+ATTR_HTML: :width 1000px
     [[file:project-switching-2.gif]]
 
+- /New in v 0.1.5:/ Autosave the state of the active project periodically. 
+
 While Emacs has many built-in features to save and restore state (bookmarks, desktop, window-configurations and more) none of them allow you to bookmark and switch to, across Emacs sessions, a collection of files, buffers and windows together as a unit... or project. Hence project-x.
 
 More features are planned, but note that Emacs' project library is a young project. As it is developed, some or all of the features in project-x might become obsolete. (In fact, that would be great.)
@@ -27,11 +29,12 @@ Load =project-x.el=, then run =(project-x-mode +1)=.
 
 OR, with =use-package=:
 #+begin_src emacs-lisp
-(use-package project-x
-  :load-path "~/path/to/project-x/"
-  :after project
-  :config
-  (project-x-mode 1))
+  (use-package project-x
+    :load-path "~/path/to/project-x/"
+    :after project
+    :config
+    (setq project-x-save-interval 600)    ;Save project state every 10 min
+    (project-x-mode 1))
 #+end_src
 
 OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
@@ -52,7 +55,7 @@ OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
 There are three customization options right now:
 - =project-x-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
 - =project-x-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=.
-- =project-x-save-interval=: Number of seconds between autosaves of the current project window configuration. Defaults to nil (autosave disabled).
+- =project-x-save-interval=: Number of seconds between autosaves of the current project window configuration. Defaults to nil (autosave disabled). This requires =project-x-mode= to be turned on.
 
 ** Usage
 
@@ -81,13 +84,13 @@ All =project.el= features should work as expected.
 :PROPERTIES:
 :ID:       c1326cad-5dd9-4789-8e5e-74f5b012b546
 :END:
-- Your project state needs to be manually saved to be restored. I'm looking into auto-saving the state any time a project buffer is opened or window displayed, or when switching projects.
-
 - This is currently limited to storing only the current frame configuration.
-  
-- The only state saved is your project files, project =dired= buffers and the current frame configuration. No minor modes, registers or special buffers (shells, help buffers etc) are recorded. For complete recall you can look into the Desktop library for Emacs.
 
+- The only state saved is your project files, project =dired= buffers and the current frame configuration. No minor modes, registers or special buffers (shells, help buffers etc) are recorded. For complete recall you can look into the Desktop library for Emacs.
+  
 - If you use multiple Emacs instances the project states saved to disk can get overwritten.
+
+- /Implemented in v0.1.5/: +Your project state needs to be manually saved to be restored. I'm looking into auto-saving the state any time a project buffer is opened or window displayed, or when switching projects.+
 
 ** Alternatives
 *** How does this compare with...
