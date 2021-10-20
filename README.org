@@ -2,9 +2,12 @@
 #+author: Karthik Chikmagalur
 #+STARTUP: nofold
 
+- /New in v 0.1.6:/ =project-x-local-identifier= can now be a list of file names
+- /New in v 0.1.5:/ Autosave the state of the active project periodically. 
+
 Project-X adds a couple of convenience features for Emacs' =project.el= library.
 
-- Recognize any directory with a =.project= file as a project. Also works if any parent directory has this file.
+- Recognize any directory with a =.project= file as a project (name customizable). Also works if any parent directory has this file.
   
 - Save and restore project files and window configurations across sessions. Project-X will load all /saved project/ files and directories (as =dired= buffers) and try to recreate the window configuration at the time of saving. Project-X can also auto-save your current project's window configuration regularly.
 
@@ -18,7 +21,6 @@ Project-X adds a couple of convenience features for Emacs' =project.el= library.
     #+ATTR_HTML: :width 1000px
     [[file:project-switching-2.gif]]
 
-- /New in v 0.1.5:/ Autosave the state of the active project periodically. 
 
 While Emacs has many built-in features to save and restore state (bookmarks, desktop, window-configurations and more) none of them allow you to bookmark and switch to, across Emacs sessions, a collection of files, buffers and windows together as a unit... or project. Hence project-x.
 
@@ -54,7 +56,10 @@ OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
 
 There are three customization options right now:
 - =project-x-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
-- =project-x-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=.
+- =project-x-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=. You can also supply a list of strings instead. For example, node projects use a file named =package.json= to denote the root of a project, Elixir uses =mix.exs= and Julia uses =Project.toml=. You can use project-x to identify all of the above as project directories by setting
+  #+BEGIN_SRC emacs-lisp
+    (setq project-x-local-identifier '("package.json" "mix.exs" "Project.toml" ".project"))
+  #+END_SRC
 - =project-x-save-interval=: Number of seconds between autosaves of the current project window configuration. Defaults to nil (autosave disabled). This requires =project-x-mode= to be turned on.
 
 ** Usage

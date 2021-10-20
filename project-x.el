@@ -48,6 +48,7 @@
 
 (require 'project)
 (eval-when-compile (require 'subr-x))
+(eval-when-compile (require 'seq))
 (defvar project-prefix-map)
 (defvar project-switch-commands)
 (declare-function project-prompt-project-dir "project")
@@ -149,8 +150,11 @@ If DIR is unspecified query the user for a project instead."
 ;; Recognize directories as projects by defining a new project backend `local'
 ;; -------------------------------------
 (defcustom project-x-local-identifier ".project"
-  "Filename that identifies a directory as a project."
-  :type 'string
+  "Filename(s) that identifies a directory as a project.
+
+You can specify a single filename or a list of names."
+  :type '(choice (string :tag "Single file")
+                 (repeat (string :tag "Filename")))
   :group 'project-x)
 
 (cl-defmethod project-root ((project (head local)))
@@ -160,7 +164,11 @@ If DIR is unspecified query the user for a project instead."
 (defun project-x-try-local (dir)
   "Determine if DIR is a non-VC project.
 DIR must include a .project file to be considered a project."
-  (if-let ((root (locate-dominating-file dir project-x-local-identifier)))
+  (if-let ((root (if (listp project-x-local-identifier)
+                     (seq-some (lambda (n)
+                                 (locate-dominating-file dir n))
+                               project-x-local-identifier)
+                   (locate-dominating-file dir project-x-local-identifier))))
       (cons 'local root)))
 
 ;;;###autoload
