@@ -24,7 +24,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Some convenience features for project.el:
+;; project-x provides some convenience features for project.el:
 ;; - Recognize any directory with a `.project' file as a project.
 ;; - Save and restore project files and window configurations across sessions
 ;;
@@ -109,8 +109,9 @@ If FILE is specified, read from it instead."
   "Save current window state of project.
 With optional prefix argument ARG, query for project."
   (interactive "P")
-  (when-let* ((dir (if arg (project-prompt-project-dir)
-                     (project-root (project-current))))
+  (when-let* ((dir (cond (arg (project-prompt-project-dir))
+                         ((project-current)
+                          (project-root (project-current)))))
               (default-directory dir))
     (unless project-x-window-alist (project-x--window-state-read))
     (let ((file-list))
