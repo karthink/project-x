@@ -53,6 +53,7 @@
 (defvar project-switch-commands)
 (declare-function project-prompt-project-dir "project")
 (declare-function project--buffer-list "project")
+(declare-function project-buffers "project")
 
 (defgroup project-x nil
   "Convenience features for the Project library."
@@ -116,7 +117,12 @@ With optional prefix argument ARG, query for project."
     (unless project-x-window-alist (project-x--window-state-read))
     (let ((file-list))
       ;; Collect file-list of all the open project buffers
-      (dolist (buf (project--buffer-list (project-current)) file-list)
+      (dolist (buf
+               (funcall (if (fboundp 'project--buffers-list)
+                            #'project--buffers-list
+                          #'project-buffers)
+                        (project-current))
+               file-list)
         (if-let ((file-name (or (buffer-file-name buf)
                                 (with-current-buffer buf
                                   (and (derived-mode-p 'dired-mode)
