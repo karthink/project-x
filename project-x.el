@@ -196,8 +196,10 @@ contains) a special file as a project."
         (project-x--window-state-read)
         (define-key project-prefix-map (kbd "w") 'project-x-window-state-save)
         (define-key project-prefix-map (kbd "j") 'project-x-window-state-load)
-        (add-to-list 'project-switch-commands
-                     '(?j "Restore windows" project-x-windows) t)
+        (if (listp project-switch-commands)
+            (add-to-list 'project-switch-commands
+                         '(?j "Restore windows" project-x-windows) t)
+          (message "`project-switch-commands` is not a list, not adding 'restore windows' command"))
         (when project-x-save-interval
           (setq project-x-save-timer
                 (run-with-timer 0 (max project-x-save-interval 5)
@@ -206,7 +208,8 @@ contains) a special file as a project."
     (remove-hook 'kill-emacs-hook 'project-x--window-state-write)
     (define-key project-prefix-map (kbd "w") nil)
     (define-key project-prefix-map (kbd "j") nil)
-    (delete '(?j "Restore windows" project-x-windows) project-switch-commands)
+    (when (listp project-switch-commands)
+      (delete '(?j "Restore windows" project-x-windows) project-switch-commands))
     (when (timerp project-x-save-timer)
       (cancel-timer project-x-save-timer))))
 

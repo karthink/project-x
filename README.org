@@ -54,6 +54,20 @@ OR, if you do not want to use the (opinionated) minor-mode =project-x-mode=,
              ("C-x p j" . project-x-window-state-load)))
 #+end_src
 
+OR, to automatically reload the windows when switching to a project,
+
+#+begin_src emacs-lisp
+  (use-package project-x
+    :load-path "~/path/to/project-x/"
+    :after project
+    :config
+    (add-hook 'project-find-functions 'project-x-try-local 90)
+    (add-hook 'kill-emacs-hook 'project-x--window-state-write)
+    (setq project-switch-commands #'project-x-windows)
+    :bind (("C-x p w" . project-x-window-state-save)
+	   ("C-x p j" . project-x-window-state-load))))
+#+end_src
+
 There are three customization options right now:
 - =project-x-window-list-file=: File to store project window configurations. Defaults to your emacs config directory.
 - =project-x-local-identifier=: String matched against file names to decide if a directory (or some parent thereof) is a project. Defaults to =.project=. You can also supply a list of strings instead. For example, node projects use a file named =package.json= to denote the root of a project, Elixir uses =mix.exs= and Julia uses =Project.toml=. You can use project-x to identify all of the above as project directories by setting
